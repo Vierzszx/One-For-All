@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\DashboardAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutentikasiController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Middleware\PastikanAdminLembaga;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/login', [AutentikasiController::class, 'tampilkanLogin'])->name('login');
@@ -15,3 +18,10 @@ Route::view('/dashboard', 'dashboard')->middleware('auth')->name('dashboard');
 
 Route::post('/logout', [AutentikasiController::class, 'logout'])->middleware('auth')->name('logout');
 
+Route::get('/admin/kegiatan', [KegiatanController::class, 'index'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->name('kegiatan.index');
+
+Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->name('admin.dashboard');
