@@ -1,0 +1,299 @@
+/*
+ * SatuTitik — halaman login (responsif + mode terang/gelap)
+ *
+ * Semua ukuran desain Figma (frame 1440x960) memakai satuan "u":
+ * calc(1 * var(--u)) = 1px pada layar 1440x960, lalu otomatis mengikuti ukuran layar lewat --u.
+ * Mode diatur lewat atribut data-theme="light|dark" di <html>.
+ */
+* { box-sizing: border-box; }
+
+:root {
+  font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --orange: #f54f1b;
+  --navy: #1e223d;
+}
+
+/* ============ MODE TERANG ============ */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --brand-bg:
+    radial-gradient(ellipse 75% 42% at 88% 64%, rgba(70, 78, 176, 0.85) 0%, rgba(52, 58, 138, 0.42) 48%, rgba(30, 34, 74, 0) 80%),
+    linear-gradient(180deg, #14162a 0%, #191c36 45%, #1d2142 100%);
+  --brand-desc: #b0c8eb;
+  --panel-bg: #fff;
+  --panel-ink: #1a2933;
+  --label: #1a2933;
+  --welcome: #1a2933;
+  --input-bg: #e5e5e5;
+  --input-ink: #1a2933;
+  --input-ph: rgba(0, 15, 34, 0.5);
+  --btn-bg: var(--orange);
+  --terms: #14191b;
+  --square-bg: var(--orange);
+  --square-inner: #913113;
+  --toggle-bg: #e5e5e5;
+  --toggle-ink: #1e223d;
+  --welcome-icon: 32px;
+  --welcome-icon-h: 32px;
+  --error: #d92d20;
+}
+
+/* ============ MODE GELAP ============ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --brand-bg:
+    radial-gradient(ellipse 70% 42% at 90% 64%, rgba(255, 176, 140, 0.85) 0%, rgba(255, 128, 80, 0.45) 45%, rgba(245, 79, 27, 0) 80%),
+    linear-gradient(180deg, #a73411 0%, #d6440f 22%, #f2501b 48%, #f55a22 100%);
+  --brand-desc: #2a3a7a;
+  --panel-bg: #1f1f1f;
+  --panel-ink: #fff;
+  --label: var(--orange);
+  --welcome: var(--orange);
+  --input-bg: #3d3c3c;
+  --input-ink: #fff;
+  --input-ph: rgba(255, 255, 255, 0.5);
+  --btn-bg: var(--navy);
+  --terms: #fff;
+  --square-bg: var(--navy);
+  --square-inner: #0f111f;
+  --toggle-bg: #3d3c3c;
+  --toggle-ink: var(--orange);
+  --welcome-icon: 28px;
+  --welcome-icon-h: 27px;
+  --error: #ff6b6b;
+}
+
+/* Gambar khusus mode: yang tidak aktif disembunyikan */
+:root[data-theme="light"] .for-dark,
+:root[data-theme="dark"] .for-light { display: none !important; }
+.themed { display: contents; }
+
+html, body { margin: 0; min-width: 320px; min-height: 100%; }
+body { overflow-x: hidden; }
+
+/* ============ KERANGKA ============ */
+.login-shell {
+  --h: max(100vh, 640px);
+  /* lebar panel kiri = 48.19% layar, tapi tidak lebih dari rasio 694:960 terhadap tinggi layar */
+  --u: calc(min(48.1944vw, var(--h) * 0.7229) / 694);
+
+  display: grid;
+  grid-template-columns: calc(694 * var(--u)) minmax(0, 1fr);
+  width: 100%;
+  height: var(--h);
+  overflow: hidden;
+}
+@supports (height: 100dvh) {
+  .login-shell { --h: max(100dvh, 640px); }
+}
+
+/* ============ PANEL KIRI ============ */
+.brand-panel {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #1e223d;
+  background-image: var(--brand-image), var(--brand-bg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center bottom;
+}
+:root[data-theme="light"] .brand-panel { --brand-image: var(--bg-light); }
+:root[data-theme="dark"]  .brand-panel { --brand-image: var(--bg-dark); }
+
+/* Panggung gambar: ditempel di bawah-kiri, ukuran desain 694x960 */
+.brand-art {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: calc(694 * var(--u));
+  height: calc(960 * var(--u));
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.brand-photo {
+  position: absolute; top: calc(247 * var(--u)); left: calc(-61 * var(--u)); width: calc(891 * var(--u)); height: calc(713 * var(--u)); overflow: hidden;
+  mask-image: var(--union-mask); mask-size: calc(694 * var(--u)) calc(960 * var(--u));
+  mask-position: calc(61 * var(--u)) calc(-247 * var(--u)); mask-repeat: no-repeat;
+}
+.brand-photo img { display: block; width: calc(891 * var(--u)); height: calc(713 * var(--u)); max-width: none; object-fit: fill; opacity: 1; }
+
+/* Logo + nama: posisinya SAMA untuk terang & gelap */
+.brand-lockup {
+  position: absolute; top: calc(96 * var(--u)); left: calc(43 * var(--u));
+  display: flex; align-items: flex-start; gap: calc(28 * var(--u));
+}
+.brand-lockup__icon { position: relative; flex: none; width: calc(124 * var(--u)); height: calc(124 * var(--u)); }
+.brand-lockup__tile, .brand-lockup__mark { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.brand-lockup__mark { padding: calc(18 * var(--u)); object-fit: contain; }
+
+.brand-copy { margin-top: calc(20 * var(--u)); white-space: nowrap; }
+.brand-copy__name { margin: 0; color: #fff; font-size: calc(40 * var(--u)); font-weight: 600; letter-spacing: 0.5px; line-height: 1.12; }
+.brand-copy__description {
+  margin: calc(10 * var(--u)) 0 0; color: var(--brand-desc); font-size: max(10px, calc(17 * var(--u))); font-weight: 600;
+  letter-spacing: calc(0.55 * var(--u)); line-height: 1; text-transform: uppercase;
+}
+
+/* ============ PANEL KANAN ============ */
+.login-panel {
+  position: relative; min-width: 0; height: 100%; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 24px;
+  background: var(--panel-bg); color: var(--panel-ink);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.decorations { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.float { position: absolute; display: block; max-width: none; }
+.float--edge { top: 50.1042%; left: -2.1448%; width: calc(59.251 * var(--u)); height: calc(56.4604 * var(--u)); transform: rotate(-101.23deg); }
+.float--small-top { top: 11.1458%; left: 69.5710%; width: calc(60 * var(--u)); height: calc(60 * var(--u)); transform: rotate(-30deg); }
+.float--top-right { top: 2.0833%; left: 92.6273%; width: calc(93.2516 * var(--u)); height: calc(86.2839 * var(--u)); transform: rotate(29.47deg); }
+.float--right-middle { top: 73.7500%; left: 92.2252%; width: calc(100.048 * var(--u)); height: calc(98.5242 * var(--u)); transform: rotate(29.47deg); }
+.float--small-left { top: 81.5625%; left: 8.8472%; width: calc(35.1051 * var(--u)); height: calc(35.1051 * var(--u)); transform: rotate(29.47deg); }
+.float--top-left { top: -2.1458%; left: 26.6756%; width: calc(78.7183 * var(--u)); height: calc(78.7183 * var(--u)); transform: rotate(-73.77deg); }
+
+.float-square {
+  --s: calc(82.267 * var(--u)); --r: calc(26 * var(--u)); --i: calc(55.688 * var(--u)); --ri: calc(18 * var(--u));
+  position: absolute; display: grid; place-items: center;
+  width: var(--s); height: var(--s); border-radius: var(--r);
+  background: var(--square-bg); transition: background-color 0.25s ease;
+}
+.float-square i {
+  display: block; width: var(--i); height: var(--i); border-radius: var(--ri);
+  background: var(--square-inner); transition: background-color 0.25s ease;
+}
+.float-square--big { --s: calc(117 * var(--u)); --r: calc(37 * var(--u)); --i: calc(79 * var(--u)); --ri: calc(25 * var(--u)); }
+.float-square--bottom-right { --s: calc(62 * var(--u)); --r: calc(20 * var(--u)); --i: calc(42 * var(--u)); --ri: calc(14 * var(--u)); }
+.float-square--big { top: 13.1771%; left: -5.0268%; transform: rotate(29.47deg); }
+.float-square--bottom-left { top: 94.6875%; left: 25.6032%; transform: rotate(-10.6deg); }
+.float-square--bottom-right { top: 95.7812%; left: 77.6810%; transform: rotate(29.47deg); }
+
+
+/* Form: alur normal (tidak absolut), lebar ikut layar tapi dibatasi */
+.form-content { position: relative; left: calc(23 * var(--u)); width: min(clamp(340px, calc(548 * var(--u)), 620px), calc(100% - calc(23 * var(--u)))); }
+
+.form-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin: -3px 0 27px; min-height: 50px;
+}
+.welcome {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  color: var(--welcome); font-size: clamp(28px, calc(34 * var(--u)), 42px); font-weight: 700; line-height: 1.2;
+  transition: color 0.25s ease;
+}
+.welcome__icon { display: block; width: var(--welcome-icon); height: var(--welcome-icon-h); max-width: none; }
+
+/* Tombol ganti mode */
+.theme-toggle {
+  flex: none; display: grid; place-items: center;
+  width: 50px; height: 50px; margin-right: 12px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: var(--toggle-bg); color: var(--toggle-ink); cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.15s ease;
+}
+.theme-toggle:hover { transform: scale(1.06); }
+.theme-toggle:active { transform: scale(0.96); }
+.theme-toggle:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.theme-toggle svg { width: 30px; height: 30px; }
+:root[data-theme="light"] .theme-toggle__sun,
+:root[data-theme="dark"] .theme-toggle__moon { display: none; }
+
+.login-form { position: relative; display: flex; flex-direction: column; margin: 0; }
+
+.field-label {
+  margin: 0 0 14px 4px; color: var(--label);
+  font-size: 12px; font-weight: 700; line-height: 14px; text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+.field-label--password { margin-top: 26px; }
+
+.field-input {
+  display: block; width: 100%; height: 58px; padding: 0 20px;
+  border: 0; border-radius: 12px; outline: 0;
+  background: var(--input-bg); color: var(--input-ink); font: inherit; font-size: 15px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+.field-input::placeholder { color: var(--input-ph); opacity: 1; }
+.field-input:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.field-input[aria-invalid="true"] { outline: 2px solid var(--error); outline-offset: 2px; }
+
+.password-field { position: relative; }
+.password-field .field-input { padding-right: 56px; }
+.password-toggle {
+  position: absolute; top: 50%; right: 22px; display: grid; place-items: center;
+  width: 26px; height: 26px; padding: 0; border: 0; background: transparent;
+  color: inherit; cursor: pointer; transform: translateY(-50%);
+}
+.password-toggle img { display: block; width: 18.3333px; height: 12.5px; max-width: none; }
+
+.submit-button {
+  margin-top: 62px; width: 100%; height: 58px; padding: 0 24px;
+  border: 0; border-radius: 12px; background: var(--btn-bg); color: #fff;
+  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: background-color 0.25s ease, filter 0.15s ease;
+}
+.submit-button:hover { filter: brightness(1.06); }
+.submit-button:disabled { opacity: 0.7; cursor: progress; }
+.submit-button:focus-visible, .password-toggle:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+/* Pesan status di luar alur, supaya tombol "Masuk" tidak bergeser */
+.form-status {
+  position: absolute; top: 100%; right: 0; left: 0; margin: 16px 0 0;
+  color: inherit; font-size: 13px; line-height: 18px; text-align: center;
+}
+.form-status.is-error { color: var(--error); }
+
+.terms {
+  position: absolute; right: 0; left: 0; bottom: clamp(20px, calc(96 * var(--u)), 120px);
+  margin: 0; padding: 0 24px;
+  color: var(--terms); font-size: 12px; line-height: 16px; text-align: center;
+  transition: color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ============ HP & TABLET KECIL: panel bertumpuk ============ */
+@media (max-width: 900px) {
+  body { overflow: auto; }
+
+  .login-shell {
+    --u: 0.62px;
+    display: flex; flex-direction: column;
+    height: auto; min-height: 100vh; overflow: visible;
+  }
+
+  .brand-panel { flex: none; height: auto; padding: 40px 24px 44px; background-position: center top; }
+
+  .brand-art { inset: 0; width: auto; height: auto; }
+  .brand-photo {
+    top: 0; right: 0; left: auto; width: 75%; height: 100%;
+    mask-image: linear-gradient(90deg, transparent, #000 45%);
+    mask-size: 100% 100%; mask-position: 0 0; mask-repeat: no-repeat;
+  }
+  .brand-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; opacity: 0.35; }
+
+  .brand-lockup { position: relative; top: auto; left: auto; gap: 16px; }
+  .brand-lockup__icon { width: 64px; height: 64px; }
+  .brand-lockup__mark { padding: 10px; }
+  .brand-copy { margin-top: 2px; white-space: normal; }
+  .brand-copy__name { font-size: 30px; }
+  .brand-copy__description { margin-top: 6px; font-size: 11px; line-height: 1.3; letter-spacing: 0.04em; }
+
+  .login-panel { flex: 1; height: auto; min-height: 560px; padding: 48px 24px 32px; }
+  .decorations { opacity: 0.85; }
+  .terms { position: static; margin-top: 40px; padding: 0; }
+  .theme-toggle { margin-right: 0; }
+  .form-content { left: 0; width: min(clamp(340px, calc(548 * var(--u)), 620px), 100%); }
+}
+
+@media (max-width: 380px) {
+  .field-input { padding: 0 16px; }
+  .brand-copy__name { font-size: 26px; }
+}
