@@ -12,6 +12,7 @@
     @elseif (auth()->user()->peran === 'Admin Lembaga')
     <h1>Dashboard Admin Lembaga</h1>
     <p>Halo, {{ auth()->user()->nama_lengkap }}.</p>
+    <p><a href="{{ route('kegiatan.index') }}">Lihat kegiatan lembaga</a></p>
     @endif
 
     <form method="POST" action="{{ route('logout') }}">

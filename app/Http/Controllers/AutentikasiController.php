@@ -37,6 +37,10 @@ class AutentikasiController extends Controller
 
         $request->session()->regenerate();
 
+        if (Auth::user()->peran === 'Admin Lembaga') {
+            return redirect()->route('admin.dashboard');
+        }
+
         return redirect()->route('dashboard');
     }
 
