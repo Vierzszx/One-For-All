@@ -21,8 +21,42 @@
     @forelse ($kegiatanTerbaru as $kegiatan)
         <div>
             <h3>{{ $kegiatan->judul }}</h3>
+
+            <img
+                src="{{ asset('storage/' . $kegiatan->poster) }}"
+                alt="Poster {{ $kegiatan->judul }}"
+                width="200"
+            >
+
             <p>Status: {{ $kegiatan->status_publikasi }}</p>
             <p>Terakhir diperbarui: {{ $kegiatan->updated_at }}</p>
+            <p>
+                Biaya pendaftaran:
+            
+                @if ($kegiatan->biaya_pendaftaran === null)
+                    Belum dicantumkan
+                @elseif ($kegiatan->biaya_pendaftaran == 0)
+                    Gratis
+                @else
+                    Rp {{ number_format($kegiatan->biaya_pendaftaran, 0, ',', '.') }}
+                @endif
+            </p>
+            
+            @if ($kegiatan->nomor_rekening)
+                <p>Nomor rekening: {{ $kegiatan->nomor_rekening }}</p>
+            @endif
+            
+            @if ($kegiatan->qris)
+                <div>
+                    <p>QRIS pembayaran:</p>
+            
+                    <img
+                        src="{{ asset('storage/' . $kegiatan->qris) }}"
+                        alt="QRIS pembayaran {{ $kegiatan->judul }}"
+                        width="200"
+                    >
+                </div>
+            @endif
         </div>
     @empty
         <p>Belum ada kegiatan untuk lembagamu.</p>

@@ -25,3 +25,11 @@ Route::get('/admin/kegiatan', [KegiatanController::class, 'index'])
 Route::get('/admin/dashboard', [DashboardAdminController::class, 'index'])
     ->middleware(['auth', PastikanAdminLembaga::class])
     ->name('admin.dashboard');
+
+Route::get('/admin/kegiatan/tambah', [KegiatanController::class, 'create'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->name('kegiatan.create');
+
+Route::post('/admin/kegiatan', [KegiatanController::class, 'store'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->name('kegiatan.store');
