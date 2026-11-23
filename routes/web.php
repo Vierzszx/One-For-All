@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Middleware\PastikanAdminLembaga;
+use App\Http\Controllers\KatalogController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -48,3 +49,10 @@ Route::patch('/admin/kegiatan/{id}/terbitkan', [KegiatanController::class, 'terb
     ->middleware(['auth', PastikanAdminLembaga::class])
     ->whereNumber('id')
     ->name('kegiatan.terbitkan');
+
+Route::get('/katalog', [KatalogController::class, 'index'])
+    ->name('katalog.index');
+
+Route::get('/katalog/{id}', [KatalogController::class, 'show'])
+    ->whereNumber('id')
+    ->name('katalog.show');
