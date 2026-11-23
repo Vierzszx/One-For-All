@@ -28,6 +28,20 @@
                 </a>
             </p>
 
+            @if ($kegiatan->status_publikasi === 'Draft')
+                <form
+                    method="POST"
+                    action="{{ route('kegiatan.terbitkan', [
+                        'id' => $kegiatan->id_kegiatan,
+                    ]) }}"
+                >
+                    @csrf
+                    @method('PATCH')
+            
+                    <button type="submit">Terbitkan Kegiatan</button>
+                </form>
+            @endif
+
             <img
                 src="{{ asset('storage/' . $kegiatan->poster) }}"
                 alt="Poster {{ $kegiatan->judul }}"
