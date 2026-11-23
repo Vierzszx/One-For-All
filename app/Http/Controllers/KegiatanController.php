@@ -292,4 +292,24 @@ class KegiatanController extends Controller
             ->route('kegiatan.index')
             ->with('sukses', 'Kegiatan berhasil diterbitkan.');
     }
+
+    public function nonaktifkan(Request $request, $id)
+    {
+        $kegiatan = Kegiatan::where('id_kegiatan', $id)
+            ->where('id_lembaga', $request->user()->id_lembaga)
+            ->firstOrFail();
+    
+        if ($kegiatan->status_publikasi !== 'Terbit') {
+            return redirect()
+                ->route('kegiatan.index')
+                ->with('sukses', 'Hanya kegiatan Terbit yang dapat dinonaktifkan.');
+        }
+    
+        $kegiatan->status_publikasi = 'Nonaktif';
+        $kegiatan->save();
+    
+        return redirect()
+            ->route('kegiatan.index')
+            ->with('sukses', 'Kegiatan berhasil dinonaktifkan.');
+    }
 }

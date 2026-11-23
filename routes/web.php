@@ -56,3 +56,8 @@ Route::get('/katalog', [KatalogController::class, 'index'])
 Route::get('/katalog/{id}', [KatalogController::class, 'show'])
     ->whereNumber('id')
     ->name('katalog.show');
+
+Route::patch('/admin/kegiatan/{id}/nonaktifkan', [KegiatanController::class, 'nonaktifkan'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->whereNumber('id')
+    ->name('kegiatan.nonaktifkan');

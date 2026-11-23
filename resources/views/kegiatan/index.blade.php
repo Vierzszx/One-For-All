@@ -42,6 +42,22 @@
                 </form>
             @endif
 
+            @if ($kegiatan->status_publikasi === 'Terbit')
+                <form
+                    method="POST"
+                    action="{{ route('kegiatan.nonaktifkan', [
+                        'id' => $kegiatan->id_kegiatan,
+                    ]) }}"
+                >
+                    @csrf
+                    @method('PATCH')
+
+                    <button type="submit">
+                        Nonaktifkan Kegiatan
+                    </button>
+                </form>
+            @endif
+
             <img
                 src="{{ asset('storage/' . $kegiatan->poster) }}"
                 alt="Poster {{ $kegiatan->judul }}"
