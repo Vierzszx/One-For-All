@@ -6,6 +6,7 @@ use App\Http\Controllers\AutentikasiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Middleware\PastikanAdminLembaga;
 use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\PendaftaranController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -56,3 +57,8 @@ Route::get('/katalog', [KatalogController::class, 'index'])
 Route::get('/katalog/{id}', [KatalogController::class, 'show'])
     ->whereNumber('id')
     ->name('katalog.show');
+
+Route::get('/katalog/{id}/daftar', [PendaftaranController::class, 'buka'])
+    ->middleware('auth')
+    ->whereNumber('id')
+    ->name('pendaftaran.buka');

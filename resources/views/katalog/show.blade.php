@@ -53,6 +53,18 @@
         </div>
     @endif
 
+    @if (session('gagal'))
+        <p role="alert">{{ session('gagal') }}</p>
+    @endif
+
+    <p>
+        <a href="{{ route('pendaftaran.buka', [
+            'id' => $kegiatan->id_kegiatan,
+        ]) }}">
+            Daftar Kegiatan
+        </a>
+    </p>
+
     <p>
         <a href="{{ route('katalog.index') }}">
             Kembali ke Katalog
