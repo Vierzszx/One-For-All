@@ -22,6 +22,12 @@
         <div>
             <h2>{{ $kegiatan->judul }}</h2>
 
+            <p>
+                <a href="{{ route('kegiatan.edit', ['id' => $kegiatan->id_kegiatan]) }}">
+                    Edit Kegiatan
+                </a>
+            </p>
+
             <img
                 src="{{ asset('storage/' . $kegiatan->poster) }}"
                 alt="Poster {{ $kegiatan->judul }}"
