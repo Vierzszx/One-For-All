@@ -33,3 +33,13 @@ Route::get('/admin/kegiatan/tambah', [KegiatanController::class, 'create'])
 Route::post('/admin/kegiatan', [KegiatanController::class, 'store'])
     ->middleware(['auth', PastikanAdminLembaga::class])
     ->name('kegiatan.store');
+
+Route::get('/admin/kegiatan/{id}/edit', [KegiatanController::class, 'edit'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->whereNumber('id')
+    ->name('kegiatan.edit');
+
+Route::put('/admin/kegiatan{id}', [KegiatanController::class, 'update'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->whereNumber('id')
+    ->name('kegiatan.update');
