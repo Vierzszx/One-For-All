@@ -270,4 +270,26 @@ class KegiatanController extends Controller
             ->route('kegiatan.index')
             ->with('sukses', 'Kegiatan berhasil diperbarui');
     }
+
+    public function terbitkan(Request $request, $id)
+    {
+        // Mencari kegiatan milik lembaga admin yang sedang login.
+        $kegiatan = Kegiatan::where('id_kegiatan', $id)
+            ->where('id_lembaga', $request->user()->id_lembaga)
+            ->firstOrFail();
+
+        // Hanya kegiatan Draft yang dapat diterbitkan melalui tombol ini.
+        if ($kegiatan->status_publikasi !== 'Draft') {
+            return redirect()
+                ->route('kegiatan.index')
+                ->with('sukses', 'Kegiatan ini sudah bukan berstatus Draft.');
+        }
+
+        $kegiatan->status_publikasi = 'Terbit';
+        $kegiatan->save();
+
+        return redirect()
+            ->route('kegiatan.index')
+            ->with('sukses', 'Kegiatan berhasil diterbitkan.');
+    }
 }

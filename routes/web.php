@@ -43,3 +43,8 @@ Route::put('/admin/kegiatan{id}', [KegiatanController::class, 'update'])
     ->middleware(['auth', PastikanAdminLembaga::class])
     ->whereNumber('id')
     ->name('kegiatan.update');
+
+Route::patch('/admin/kegiatan/{id}/terbitkan', [KegiatanController::class, 'terbitkan'])
+    ->middleware(['auth', PastikanAdminLembaga::class])
+    ->whereNumber('id')
+    ->name('kegiatan.terbitkan');
