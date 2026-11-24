@@ -22,7 +22,7 @@
   --brand-bg:
     radial-gradient(ellipse 75% 42% at 88% 64%, rgba(70, 78, 176, 0.85) 0%, rgba(52, 58, 138, 0.42) 48%, rgba(30, 34, 74, 0) 80%),
     linear-gradient(180deg, #14162a 0%, #191c36 45%, #1d2142 100%);
-  --brand-desc: #b0c8eb;
+  --brand-desc: #F8F9FB;
   --panel-bg: #fff;
   --panel-ink: #1a2933;
   --label: #1a2933;
@@ -47,7 +47,7 @@
   --brand-bg:
     radial-gradient(ellipse 70% 42% at 90% 64%, rgba(255, 176, 140, 0.85) 0%, rgba(255, 128, 80, 0.45) 45%, rgba(245, 79, 27, 0) 80%),
     linear-gradient(180deg, #a73411 0%, #d6440f 22%, #f2501b 48%, #f55a22 100%);
-  --brand-desc: #2a3a7a;
+  --brand-desc: #1F1F1F;
   --panel-bg: #1f1f1f;
   --panel-ink: #fff;
   --label: var(--orange);
