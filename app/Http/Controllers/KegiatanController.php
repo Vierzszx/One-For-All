@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Kegiatan;
 
@@ -12,13 +13,25 @@ class KegiatanController extends Controller
     public function index(Request $request) 
     {
         $idLembaga = $request->user()->id_lembaga;
+        $lembaga = DB::table('lembaga')
+            ->where('id_lembaga', $idLembaga)
+            ->first();
 
-        $daftarKegiatan = Kegiatan::where('id_lembaga', $idLembaga)
+        $queryLembaga = Kegiatan::where('id_lembaga', $idLembaga);
+
+        $daftarKegiatan = (clone $queryLembaga)
             ->orderByDesc('created_at')
             ->get();
+        $totalKegiatan = (clone $queryLembaga)->count();
+        $jumlahDraft = (clone $queryLembaga)
+            ->where('status_publikasi', 'Draft')
+            ->count();
 
         return view('kegiatan.index', [
             'daftarKegiatan' => $daftarKegiatan,
+            'lembaga' => $lembaga,
+            'totalKegiatan' => $totalKegiatan,
+            'jumlahDraft' => $jumlahDraft,
         ]);
     }
 
@@ -259,7 +272,7 @@ class KegiatanController extends Controller
 
         // gambar lama dihapus setelah pembaruan database berhasil
         if ($posterBaru && $posterLama) {
-            Storage::disk('public')->delete($qrisLama);
+            Storage::disk('public')->delete($posterLama);
         }
 
         if ($qrisBaru && $qrisLama) {
@@ -313,3 +326,4 @@ class KegiatanController extends Controller
             ->with('sukses', 'Kegiatan berhasil dinonaktifkan.');
     }
 }
+

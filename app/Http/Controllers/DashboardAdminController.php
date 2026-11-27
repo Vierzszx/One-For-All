@@ -18,12 +18,8 @@ class DashboardAdminController extends Controller
             ->where('id_lembaga', $pengguna->id_lembaga)
             ->first();
 
-        // menghitung seluruh kegiatan milik lembaganya
-        $totalKegiatan = Kegiatan::where (
-            'id_lembaga',
-            $pengguna->id_lembaga
-        )
-            ->where('status_publikasi', 'Draft')
+        // Menghitung seluruh kegiatan milik lembaga admin.
+        $totalKegiatan = Kegiatan::where('id_lembaga', $pengguna->id_lembaga)
             ->count();
 
         // menghitung kegiatan yang masih berupa draft

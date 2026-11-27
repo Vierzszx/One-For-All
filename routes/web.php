@@ -40,7 +40,7 @@ Route::get('/admin/kegiatan/{id}/edit', [KegiatanController::class, 'edit'])
     ->whereNumber('id')
     ->name('kegiatan.edit');
 
-Route::put('/admin/kegiatan{id}', [KegiatanController::class, 'update'])
+Route::put('/admin/kegiatan/{id}', [KegiatanController::class, 'update'])
     ->middleware(['auth', PastikanAdminLembaga::class])
     ->whereNumber('id')
     ->name('kegiatan.update');
